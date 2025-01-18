@@ -25,7 +25,7 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
 
-  apps/docs:
+  apps/server:
     dependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -40,6 +40,9 @@ importers:
         specifier: ^4.21.2
         version: 4.21.2
     devDependencies:
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       ts-node-dev:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.17.6)(typescript@5.7.3)
@@ -80,6 +83,19 @@ importers:
       typescript:
         specifier: 5.5.4
         version: 5.5.4
+
+  packages/db:
+    dependencies:
+      '@prisma/client':
+        specifier: 6.2.1
+        version: 6.2.1(prisma@6.2.1)
+      prisma:
+        specifier: ^6.2.1
+        version: 6.2.1
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   packages/eslint-config:
     devDependencies:
