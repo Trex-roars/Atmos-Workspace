@@ -1,0 +1,10 @@
+{
+    "name": "db",
+    "version": "1.0.0",
+    "exports": {
+        ".": "./client.ts"
+    },
+    "dependencies": {
+        "@prisma/client": "^4.x.x"
+    }
+}
