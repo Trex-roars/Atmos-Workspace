@@ -1,5 +1,5 @@
 {
-  "name": "Atmos-Final",
+  "name": "Atmos-WorkSpace",
   "private": true,
   "scripts": {
     "build": "turbo build",
