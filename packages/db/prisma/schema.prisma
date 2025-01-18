@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String     @id @default(uuid())
+  name               String?
+  email              String     @unique
+  password           String?
+  profilePicture     String?
+  isActive           Boolean    @default(true)
+  lastLogin          DateTime?
+  currentWorkspaceId String?
+  currentWorkspace   Workspace? @relation(fields: [currentWorkspaceId], references: [id])
+  accounts           Account[]
+  projects           Project[]
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  Member             Member[]
+}
+
+model Workspace {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  ownerId     String
+  inviteCode  String    @unique @default(uuid())
+  members     Member[]
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  User        User[]
+}
+
+model Member {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  roleId      String
+  role        Role      @relation(fields: [roleId], references: [id])
+  joinedAt    DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Account {
+  id           String       @id @default(uuid())
+  provider     ProviderEnum
+  providerId   String       @unique
+  userId       String
+  user         User         @relation(fields: [userId], references: [id])
+  refreshToken String?
+  tokenExpiry  DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Project {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  emoji       String    @default("📊")
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  createdById String
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Role {
+  id          String           @id @default(uuid())
+  name        RoleEnum
+  permissions PermissionEnum[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  Member      Member[]
+}
+
+enum RoleEnum {
+  ADMIN
+  MEMBER
+}
+
+enum PermissionEnum {
+  READ
+  WRITE
+  DELETE
+}
+
+enum ProviderEnum {
+  EMAIL
+  GOOGLE
+  FACEBOOK
+}
